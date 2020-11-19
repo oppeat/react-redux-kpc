@@ -55,6 +55,10 @@
   margin-bottom: 1em !important;
 }
 
+.radio-label{
+  padding: 0.5em;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

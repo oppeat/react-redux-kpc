@@ -1,13 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Segment,Table,Pagination,Checkbox,Grid } from 'semantic-ui-react';
-import { DateInput } from 'semantic-ui-calendar-react';
+import React from 'react';
+import { Segment,Table,Pagination,Checkbox,Button,Icon } from 'semantic-ui-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { delete_record } from '../actions'
 
 export default function TablePanel (){
+
+  const recordData = useSelector(state => state.records)
+  const pageMax = 10;
+  const recordAmount = recordData.records.length;
+  var totalPages = 1;
+  if(recordAmount !== 0){
+    totalPages = Math.ceil(recordAmount / pageMax);
+  }
+  if(totalPages == 0){
+    totalPages = totalPages+1;
+  }
+
+  const dispatch = useDispatch();
 
   return(
   <Segment raised>
     <div>
-      <Pagination size='small' defaultActivePage={5} totalPages={10} />
+      <Pagination size='small' defaultActivePage={1} totalPages={totalPages} />
     </div>
     <Table celled compact definition>
     <Table.Header fullWidth>
@@ -17,21 +31,36 @@ export default function TablePanel (){
         <Table.HeaderCell>Gender</Table.HeaderCell>
         <Table.HeaderCell>Mobile Phone</Table.HeaderCell>
         <Table.HeaderCell>Nationality</Table.HeaderCell>
-        <Table.HeaderCell>Actions</Table.HeaderCell>
+        <Table.HeaderCell textAlign='center'>Actions</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
     <Table.Body>
-      <Table.Row>
-        <Table.Cell collapsing>
-          <Checkbox />
-        </Table.Cell>
-        <Table.Cell>John Lilki</Table.Cell>
-        <Table.Cell>September 14, 2013</Table.Cell>
-        <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-        <Table.Cell>No</Table.Cell>
-        <Table.Cell>Here for Action Buttons</Table.Cell>
-      </Table.Row>
+      {recordData.records.map(x => 
+        <Table.Row key={x.id}>
+          <Table.Cell collapsing>
+            <Checkbox />
+          </Table.Cell>
+          <Table.Cell>{x.firstname + " " + x.lastname}</Table.Cell>
+          <Table.Cell>{x.gender}</Table.Cell>
+          <Table.Cell>{x.mobileno}</Table.Cell>
+          <Table.Cell>{x.nationality}</Table.Cell>
+          <Table.Cell textAlign='center'>
+            <Button animated='vertical' color='grey'>
+              <Button.Content hidden>Edit</Button.Content>
+              <Button.Content visible>
+                <Icon name='edit' />
+              </Button.Content>
+            </Button>
+            <Button animated='vertical' color='red' onClick={() => dispatch(delete_record(x.id))}>
+              <Button.Content hidden>Delete</Button.Content>
+              <Button.Content visible>
+                <Icon name='trash' />
+              </Button.Content>
+            </Button>
+          </Table.Cell>
+      </Table.Row>)}
+
     </Table.Body>
   </Table>
     
