@@ -60,9 +60,9 @@ export default function TablePanel (){
             <Checkbox checked={selectedIds?.indexOf(x.id) !== -1 ? true : false} onClick={() => selectedIds?.indexOf(x.id) !== -1 ? dispatch(remove_select(x.id)) : dispatch(add_select(x.id))}/>
           </Table.Cell>
           <Table.Cell>{x.firstname + " " + x.lastname}</Table.Cell>
-          <Table.Cell>{x.gender}</Table.Cell>
-          <Table.Cell>{x.mobileno}</Table.Cell>
-          <Table.Cell>{x.nationality}</Table.Cell>
+          <Table.Cell>{x.gender ? x.gender : "-"}</Table.Cell>
+          <Table.Cell>{(x.prefix ? x.prefix:'') + x.mobileno}</Table.Cell>
+          <Table.Cell>{x.nationality ? x.nationality : "-"}</Table.Cell>
           <Table.Cell textAlign='center'>
             <Button animated='vertical' color='grey'>
               <Button.Content hidden>Edit</Button.Content>

@@ -1,64 +1,112 @@
-import React from 'react';
-import { Segment,Form,Button } from 'semantic-ui-react';
+import React, {useState} from 'react';
+import { Segment,Form,Button,Message } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import { useSelector,useDispatch } from 'react-redux';
 import { add_record } from '../actions';
 import { reduxForm, Field } from 'redux-form';
 
-const renderInput = (props) => (
-  <Form.Input {...props} />
-)
+const options = [
+  { key: 'm', text: 'Male', value: 'Male' },
+  { key: 'f', text: 'Female', value: 'Female' },
+  { key: 'o', text: 'Unisex', value: 'Unisex' },
+]
 
-const renderDropdown = (props) => (
+const titles = [
+  { key: 'mr', text: 'Mr.', value: 'Mr.' },
+  { key: 'ms', text: 'Ms.', value: 'Ms.' },
+  { key: 'mrs', text: 'Mrs.', value: 'Mrs.' },
+]
+
+const nationalities = [
+  { key: 'th', text: 'Thai', value: 'Thai' },
+  { key: 'us', text: 'America', value: 'American' },
+  { key: 'la', text: 'Laos', value: 'Laos' },
+]
+
+const countryCode =[
+  { key: 'th', flag: 'th', text:'+66', value: '+66'},
+  { key: 'us', flag: 'us', text:'+1', value: '+1'},
+  { key: 'la', flag: 'la', text:'+865', value: '+865'}
+]
+
+const renderInput = (props) => {
+  const {meta} = props;
+  return ([
+    <Form.Input key={props.input.name} {...props} />,
+    meta.invalid && 
+      <Message key={props.input.name+"Msg"} content={meta.error} negative/>
+  ])}
+
+const renderDropdown = (props) => {
+  const {meta} = props;
+  return([
   <Form.Dropdown 
   {...props} 
+  key={props.input.name}
   value={props.input.value} 
-  onChange={(param,data) => props.input.onChange(data.value)}/>
-)
+  onChange={(param,data) => props.input.onChange(data.value)}/>,
+  meta.invalid && 
+    <Message key={props.input.name+"Msg"} content={meta.error} negative/>
+  ])}
 
-const renderDate = (props) => (
+const renderDate = (props) => {
+  const {meta} = props;
+  return([
   <DateInput 
+  key={props.input.name}
   value={props.input.value} 
-  onChange={(param,data) => props.input.onChange(data.value)}/>
-)
+  onChange={(param,data) => props.input.onChange(data.value)}/>,
+  meta.invalid && 
+    <Message key={props.input.name+"Msg"} content={meta.error} negative/>
+  ])}
 
-const renderRadio = ({ input, meta, ...rest }) => (
-  <Form.Radio {...input} {...rest} checked={input.value === rest.value} />
-);
+const renderMobile = (props) => {
+  const {meta} = props;
+  return([
+  <Form.Group key="mobileInput" unstackable={true} inline {...props}>
+    <Field fluid
+      options={countryCode}
+      placeholder='Code'
+      name='prefix'
+      component={renderDropdown}
+    />
+    <label>-</label>
+    <Field component={renderInput} style={{padding: '0'}} width={12} placeholder='Mobile No' name='mobileno'/>
+  </Form.Group>,
+  meta.invalid && 
+    <Message key={"mobileMsg"} content={meta.error} negative/>
+  ])}
 
-function FormPanel (){
+const renderInputSalary = (props) => {
+  const {meta} = props;
+  return ([
+    <Form.Input key={props.input.name} {...props} />,
+    <label key={'label'}>THB</label>,
+    meta.invalid && 
+      <Message key={props.input.name+"Msg"} content={meta.error} negative/>
+  ])}
 
-  function handleRadioChange(event){
-    console.log(event)
-    event.target.blur();
+const required = v => {
+  if(!v || v === ''){
+    return 'This field is required';
   }
+  return undefined;
+}
+
+//Validation
+const alphabet = value =>
+  value && /[^a-zA-Z ]/i.test(value)
+    ? 'Only alphabet characters'
+    : undefined
+const numeric = value =>
+  value && /[^0-9 ]/i.test(value)
+    ? 'Only numeric characters'
+    : undefined
+
+const FormPanel = ({handleSubmit, valid}) => {
 
   const dispatch = useDispatch();
-  const formData = useSelector(state => state.form["registration-form"])
-
-  const options = [
-    { key: 'm', text: 'Male', value: 'Male' },
-    { key: 'f', text: 'Female', value: 'Female' },
-    { key: 'o', text: 'Unisex', value: 'Unisex' },
-  ]
-
-  const titles = [
-    { key: 'mr', text: 'Mr.', value: 'Mr.' },
-    { key: 'ms', text: 'Ms.', value: 'Ms.' },
-    { key: 'mrs', text: 'Mrs.', value: 'Mrs.' },
-  ]
-
-  const nationalities = [
-    { key: 'th', text: 'Thai', value: 'Thai' },
-    { key: 'us', text: 'America', value: 'American' },
-    { key: 'la', text: 'Laos', value: 'Laos' },
-  ]
-
-  const countryCode =[
-    { key: 'th', flag: 'th', text:'+66', value: '+66'},
-    { key: 'us', flag: 'us', text:'+1', value: '+1'},
-    { key: 'la', flag: 'la', text:'+865', value: '+865'}
-  ]
+  const formData = useSelector(state => state.form["registration-form"]);
 
   return(
     <Segment raised>
@@ -72,15 +120,16 @@ function FormPanel (){
                 placeholder='Title'
                 name='title'
                 component={renderDropdown}
+                validate={required}
               />
             </Form.Field>
             <Form.Field inline width={6} required >
               <label>Firstname</label>
-              <Field name='firstname' placeholder='First name' component={renderInput} />
+              <Field name='firstname' placeholder='First name' component={renderInput} validate={[required,alphabet]} />
             </Form.Field>
             <Form.Field inline width={6} required >
               <label>Lastname</label>
-              <Field name='lastname' placeholder='Last name' component={renderInput} />
+              <Field name='lastname' placeholder='Last name' component={renderInput} validate={[required,alphabet]}/>
             </Form.Field>
           </Form.Group>
 
@@ -92,6 +141,7 @@ function FormPanel (){
                 placeholder="Date"
                 iconPosition="left"
                 component={renderDate}
+                validate={required}
               />
             </Form.Field>
             <Form.Field inline width={10}>
@@ -145,16 +195,10 @@ function FormPanel (){
             </Form.Field>
             <Form.Field width={13} required>
               <label>Mobile No.</label>
-              <Form.Group unstackable={true} inline >
-                <Field fluid
-                  options={countryCode}
-                  placeholder='Code'
-                  name='prefix'
-                  component={renderDropdown}
-                />
-                <label>-</label>
-                <Field component={renderInput} style={{padding: '0'}} width={12} placeholder='Mobile No' name='mobileno'/>
-              </Form.Group>
+              <Field 
+              name="mobileFull" 
+              component={renderMobile} 
+              validate={ (formData?.values?.prefix && formData?.values?.mobileno) ? undefined : required} />
             </Form.Field>
           </Form.Group>
 
@@ -169,12 +213,11 @@ function FormPanel (){
             <Form.Field inline required >
                 <label>Expected Salary</label>
                 <Form.Group unstackable={true} inline width={6}>
-                  <Field component={renderInput} placeholder='' name='salary' />
-                  <label>THB</label>
+                  <Field component={renderInputSalary} placeholder='' name='salary' validate={[required,numeric]}/>
                 </Form.Group>
             </Form.Field>
           </Form.Group>
-          <Button primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>
+          <Button disabled={!valid} primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>
       </Form>
     </Segment>
   );
