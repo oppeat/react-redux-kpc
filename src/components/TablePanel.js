@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Segment,Table,Pagination,Checkbox,Button,Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { delete_record } from '../actions'
 
 export default function TablePanel (){
 
+  const [activePage,setActivePage] = useState(1);
   const recordData = useSelector(state => state.records)
   const pageMax = 10;
   const recordAmount = recordData.records.length;
@@ -16,12 +17,15 @@ export default function TablePanel (){
     totalPages = totalPages+1;
   }
 
+  const filteredRecordData = recordData.records.slice((activePage-1)*pageMax, activePage*pageMax)
   const dispatch = useDispatch();
+
+  const handlePaginationChange = (e, { activePage }) => setActivePage(activePage);
 
   return(
   <Segment raised>
     <div>
-      <Pagination size='small' defaultActivePage={1} totalPages={totalPages} />
+      <Pagination size='small' activePage={activePage} totalPages={totalPages} onPageChange={handlePaginationChange} />
     </div>
     <Table celled compact definition>
     <Table.Header fullWidth>
@@ -36,7 +40,7 @@ export default function TablePanel (){
     </Table.Header>
 
     <Table.Body>
-      {recordData.records.map(x => 
+      {filteredRecordData.map(x => 
         <Table.Row key={x.id}>
           <Table.Cell collapsing>
             <Checkbox />
