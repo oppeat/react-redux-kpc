@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Segment,Table,Pagination,Checkbox,Button,Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { delete_record, add_select, remove_select, add_multiple, remove_multiple, delete_multiple } from '../actions'
+import EditModal from './EditModal'
 
 export default function TablePanel (){
 
@@ -64,12 +65,7 @@ export default function TablePanel (){
           <Table.Cell>{(x.prefix ? x.prefix:'') + x.mobileno}</Table.Cell>
           <Table.Cell>{x.nationality ? x.nationality : "-"}</Table.Cell>
           <Table.Cell textAlign='center'>
-            <Button animated='vertical' color='grey'>
-              <Button.Content hidden>Edit</Button.Content>
-              <Button.Content visible>
-                <Icon name='edit' />
-              </Button.Content>
-            </Button>
+            <EditModal recordId={x.id} oldData={x}/>
             <Button animated='vertical' color='red' onClick={() => dispatch(delete_record(x.id))}>
               <Button.Content hidden>Delete</Button.Content>
               <Button.Content visible>

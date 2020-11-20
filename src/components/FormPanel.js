@@ -103,8 +103,9 @@ const numeric = value =>
     ? 'Only numeric characters'
     : undefined
 
-const FormPanel = ({handleSubmit, valid}) => {
-
+const FormPanel = (props) => {
+  const {valid,recordId,initialValues} = props;
+  console.log(initialValues)
   const dispatch = useDispatch();
   const formData = useSelector(state => state.form["registration-form"]);
 
@@ -217,12 +218,13 @@ const FormPanel = ({handleSubmit, valid}) => {
                 </Form.Group>
             </Form.Field>
           </Form.Group>
-          <Button disabled={!valid} primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>
+          {!recordId &&<Button disabled={!valid} primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>}
       </Form>
     </Segment>
   );
 }
 
 export default reduxForm({
-  form: 'registration-form'
+  form: 'registration-form',
+  enableReinitialize: true
 })(FormPanel);
