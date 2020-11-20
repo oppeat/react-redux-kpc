@@ -15,7 +15,11 @@ const record = (state = initialState, action) => {
     case 'DELETE_RECORD':
       var selectedId = action.id;
       const updatedRecords = state.records.filter(x => x.id !== selectedId);
-      return {records: [...updatedRecords], counter: state.counter};      
+      return {records: [...updatedRecords], counter: state.counter}; 
+    case 'DELETE_RECORD_MULTIPLE':
+      var removeIds = action.ids;
+      const updated = state.records.filter(x => removeIds.indexOf(x.id) === -1);
+      return {records: [...updated], counter: state.counter};      
     default:
       return state
   }

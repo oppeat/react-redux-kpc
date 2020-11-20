@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import { Segment,Table,Pagination,Checkbox,Button,Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { delete_record } from '../actions'
+import { delete_record, add_select, remove_select, add_multiple, remove_multiple, delete_multiple } from '../actions'
 
 export default function TablePanel (){
 
   const [activePage,setActivePage] = useState(1);
   const recordData = useSelector(state => state.records)
+  const selectedIds = useSelector(state => state.selected.selected)
   const pageMax = 10;
   const recordAmount = recordData.records.length;
   var totalPages = 1;
@@ -22,9 +23,22 @@ export default function TablePanel (){
 
   const handlePaginationChange = (e, { activePage }) => setActivePage(activePage);
 
+  function isAllSelect(){
+    for(var record of filteredRecordData){
+      if(selectedIds?.indexOf(record.id) === -1){
+        return false;
+      }
+    }
+    return true;
+  }
+
   return(
   <Segment raised>
     <div>
+      <div style={{display: 'inline-block'}}>
+        <Checkbox style={{margin: '0 1em'}} label="Select All" checked={isAllSelect()} onClick={() => isAllSelect() ? dispatch(remove_multiple(filteredRecordData.map(x => x.id))) : dispatch(add_multiple(filteredRecordData.map(x => x.id)))}/>
+        <Button style={{margin: '0 1em'}} color='red' onClick={() => dispatch(delete_multiple(selectedIds))}>Delete</Button>
+      </div>
       <Pagination size='small' activePage={activePage} totalPages={totalPages} onPageChange={handlePaginationChange} />
     </div>
     <Table celled compact definition>
@@ -43,7 +57,7 @@ export default function TablePanel (){
       {filteredRecordData.map(x => 
         <Table.Row key={x.id}>
           <Table.Cell collapsing>
-            <Checkbox />
+            <Checkbox checked={selectedIds?.indexOf(x.id) !== -1 ? true : false} onClick={() => selectedIds?.indexOf(x.id) !== -1 ? dispatch(remove_select(x.id)) : dispatch(add_select(x.id))}/>
           </Table.Cell>
           <Table.Cell>{x.firstname + " " + x.lastname}</Table.Cell>
           <Table.Cell>{x.gender}</Table.Cell>
