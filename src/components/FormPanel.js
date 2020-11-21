@@ -3,7 +3,7 @@ import { Segment,Form,Button,Message } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import { useSelector,useDispatch } from 'react-redux';
 import { add_record, update_record } from '../actions';
-import { reduxForm, Field } from 'redux-form';
+import { reset, reduxForm, Field } from 'redux-form';
 
 const options = [
   { key: 'm', text: 'Male', value: 'Male' },
@@ -114,9 +114,15 @@ const FormPanel = (props) => {
     dispatch(update_record(record))
   }
 
+  const addNewRecord =  (record) => {;
+    dispatch(add_record(record))
+    dispatch(reset('registration-form'))
+  }
+
   return(
     <Segment raised>
       <Form style={{ width: '80%',margin: 'auto'}}>
+      {!recordId &&<h1>Add a Record</h1>}
           <Form.Group >
             <Form.Field inline width={4} required >
               <label>Title</label>
@@ -223,7 +229,7 @@ const FormPanel = (props) => {
                 </Form.Group>
             </Form.Field>
           </Form.Group>
-          {!recordId &&<Button disabled={!valid} primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>}
+          {!recordId &&<Button disabled={!valid} primary onClick={() => addNewRecord({...formData.values})}>Submit</Button>}
           {recordId && 
           <div style={{textAlign: 'right'}}>
             <Button color='black' onClick={() => setOpen(false)}>

@@ -1,7 +1,7 @@
 const initialState = {
   records: [
-    { id:1, title:"Mrs.", firstname:"Michael", lastname:"Johnson", gender:"Male",prefix:"+66", mobileno: "0853757439", nationality:"Thai"},
-    { id:2, title:"Mr.",firstname:"Mike", lastname:"Johnson", gender:"Male",prefix:"+66", mobileno: "0853757466", nationality:"America"}
+    { id:1, title:"Mrs.", firstname:"Michael", lastname:"Johnson", gender:"Male",prefix:"+66", mobileno: "0853757439", nationality:"Thai", birthday:"11-01-1998", salary:"20000"},
+    { id:2, title:"Mr.",firstname:"Mike", lastname:"Johnson", gender:"Male",prefix:"+66", mobileno: "0853757466", nationality:"America", birthday:"24-07-1990", salary:"65000"}
   ],
   counter: 2
 };

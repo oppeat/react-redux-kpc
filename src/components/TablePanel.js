@@ -25,6 +25,9 @@ export default function TablePanel (){
   const handlePaginationChange = (e, { activePage }) => setActivePage(activePage);
 
   function isAllSelect(){
+    if(filteredRecordData.length === 0){
+      return false;
+    }
     for(var record of filteredRecordData){
       if(selectedIds?.indexOf(record.id) === -1){
         return false;
