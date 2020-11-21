@@ -4,7 +4,6 @@ import FormPanel from './FormPanel'
 
 function EditModal({recordId,oldData}) {
   const [open, setOpen] = React.useState(false)
-  console.log(oldData)
   return (
     <Modal
       onClose={() => setOpen(false)}
@@ -20,19 +19,10 @@ function EditModal({recordId,oldData}) {
     >
       <Modal.Header>Edit Record</Modal.Header>
       <Modal.Content >
-        <FormPanel recordId={recordId} initialValues={oldData? oldData : null}/>
+        <FormPanel recordId={recordId} initialValues={oldData? oldData : null} setOpen={setOpen}/>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='black' onClick={() => setOpen(false)}>
-          Cancel
-        </Button>
-        <Button
-          content="Save Changes"
-          labelPosition='right'
-          icon='checkmark'
-          onClick={() => setOpen(false)}
-          positive
-        />
+        
       </Modal.Actions>
     </Modal>
   )

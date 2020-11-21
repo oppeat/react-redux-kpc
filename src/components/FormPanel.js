@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Segment,Form,Button,Message } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import { useSelector,useDispatch } from 'react-redux';
-import { add_record } from '../actions';
+import { add_record, update_record } from '../actions';
 import { reduxForm, Field } from 'redux-form';
 
 const options = [
@@ -104,10 +104,15 @@ const numeric = value =>
     : undefined
 
 const FormPanel = (props) => {
-  const {valid,recordId,initialValues} = props;
-  console.log(initialValues)
+  const {valid,recordId,initialValues,setOpen} = props;
   const dispatch = useDispatch();
   const formData = useSelector(state => state.form["registration-form"]);
+
+  
+  const saveChanges = (record) => {
+    setOpen(false);
+    dispatch(update_record(record))
+  }
 
   return(
     <Segment raised>
@@ -219,6 +224,13 @@ const FormPanel = (props) => {
             </Form.Field>
           </Form.Group>
           {!recordId &&<Button disabled={!valid} primary onClick={() => dispatch(add_record({...formData.values}))}>Submit</Button>}
+          {recordId && 
+          <div style={{textAlign: 'right'}}>
+            <Button color='black' onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button disabled={!valid} positive labelPosition='right' icon='checkmark' content='Save Changes' onClick={() => saveChanges({...formData.values})}/>
+          </div>}
       </Form>
     </Segment>
   );

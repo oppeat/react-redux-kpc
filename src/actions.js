@@ -32,3 +32,8 @@ export const delete_multiple = (ids) => ({
   type: 'DELETE_RECORD_MULTIPLE',
   ids
 })
+
+export const update_record = (record) => ({
+  type: 'UPDATE_RECORD',
+  record
+})
