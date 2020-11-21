@@ -19,10 +19,10 @@ function App() {
             <nav>
               <ul>
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link to="/react-redux-kpc/">Home</Link>
                 </li>
                 <li>
-                  <Link to="/add">Add</Link>
+                  <Link to="/react-redux-kpc/add">Add</Link>
                 </li>
               </ul>
             </nav>
