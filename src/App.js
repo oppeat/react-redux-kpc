@@ -28,8 +28,11 @@ function App() {
             </nav>
 
             <Switch>
-              <Route path="/add">
+              <Route path="/react-redux-kpc/add">
                 <FormPanel />
+              </Route>
+              <Route path="/react-redux-kpc/">
+                <TablePanel />
               </Route>
               <Route path="/">
                 <TablePanel />
